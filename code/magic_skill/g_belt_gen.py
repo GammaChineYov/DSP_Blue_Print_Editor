@@ -49,7 +49,7 @@ def belt_gen(bt1:BlueTu, pos_data, level=3):
             y= (point[1] - pre_point[1])
             z= (point[2] - pre_point[2])
             dir = math.sqrt(x*x + y*y + z*z) # 距离
-            point_num = int(dir) +  (1 if dir - int(dir) > 0.3 else 0) # 两节点间需要的传送带数
+            point_num = int(dir) +  (1 if dir - int(dir) > 0.2 else 0) # 两节点间需要的传送带数
             # 计算增量
             bias_x, bias_y, bias_z  = x / dir, y / dir, z / dir
 
