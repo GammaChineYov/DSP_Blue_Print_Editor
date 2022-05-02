@@ -36,7 +36,8 @@ def belt_gen(bt1:BlueTu, pos_data, level=3):
         # 第一个节点
         pre_index = index_group.make_index() # 上一个索引
         pre_point = yiT_belt[:3] # 第一个节点
-        print(pre_point)
+        print(f"第{i}条传送带,节点数:{len(yiT_belt)/3}")
+        print("第一个点:", pre_point)
         pre_belt = Belt(index=pre_index, **dict(zip('xyz', yiT_belt[:3])), level=level) # 第一个传送带
         belts.selected_buildings.add(pre_belt)
 
@@ -48,10 +49,16 @@ def belt_gen(bt1:BlueTu, pos_data, level=3):
             x= (point[0] - pre_point[0])
             y= (point[1] - pre_point[1])
             z= (point[2] - pre_point[2])
-            dir = math.sqrt(x*x + y*y + z*z) # 距离
+            dir = math.dist(point, pre_point) # 距离
             point_num = int(dir) +  (1 if dir - int(dir) > 0.2 else 0) # 两节点间需要的传送带数
             # 计算增量
-            bias_x, bias_y, bias_z  = x / dir, y / dir, z / dir
+            try:
+                bias_x, bias_y, bias_z  = x / dir, y / dir, z / dir
+            except:
+                print(f"当前节点序号:{point_n3/3}")
+                print(f"节点1:{pre_point}")
+                print(f"节点2:{point}")
+                raise "生成出错"
 
             # 生成每两节点间的传送带
             for n_belt in range(1, point_num): # 获取节点间的第n个传送带

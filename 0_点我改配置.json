@@ -67,14 +67,16 @@
         },
     "3D打印文件转传送带"
             : {
-            "文件路径": "C:\\Users\\Administrator\\Documents\\Dyson Sphere Program\\Blueprint\\仙术\\UM2E_名字.gcode",
-            "X轴缩放": 2.5,
-            "Y轴缩放": 2.5,
-            "Z轴缩放": 1,
+            "文件路径": "C:\\Users\\Administrator\\Desktop\\绘图.gcode",
+            "X轴缩放": 1.1,
+            "Y轴缩放": 1.1,
+            "Z轴缩放": -1,
             "X轴偏移": 50,
             "Y轴偏移": 100,
             "Z轴偏移": 0,
-            "Z轴生成区间": [-10, 0.8]
+            "Z轴生成区间": [-100, 100],
+            "回到起点": true,
+            "追加坐标": []
         }
     
     
