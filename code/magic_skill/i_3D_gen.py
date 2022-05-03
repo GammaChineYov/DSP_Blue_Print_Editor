@@ -119,7 +119,7 @@ append_point=tuple(),back_start_point=True):
                 last_Z = 0
 
 
-    point_list = point_list[1:-1]
+    point_list = point_list[:-1]
     x_mean = sum([p[0] for p in point_list]) / len(point_list)
     y_mean = sum([p[1] for p in point_list]) / len(point_list)
     z_mean = sum([p[2] for p in point_list]) / len(point_list)
@@ -132,7 +132,7 @@ append_point=tuple(),back_start_point=True):
     posdata[0].extend(append_point)
     if back_start_point:
         sp = list(posdata[0][:3])
-        sp[2] = posdata[0][-1]
+        sp[2] = posdata[0][-1] + (-0.25 if posdata[0][-1] > posdata[0][2] else 0.25)
         posdata[0].extend(tuple(sp))
         sp[2] = posdata[0][2]
         posdata[0].extend(tuple(sp))
