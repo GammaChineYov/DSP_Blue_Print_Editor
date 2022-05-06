@@ -190,8 +190,12 @@ class BuildingOprate:
         """设置某个建筑为所有的基底, 用于突破蓝图的建造高度限制"""
         belts = self.select_belt()
         sorts = self.select_sort()
-        up_buildings = self -belts - sorts - bottom_building
-
+        up_buildings:BuildingOprate = self -belts - sorts - bottom_building
+        low_building = set()
+        for building, z in up_buildings.get("z").items():
+            if -1.75<=z<=1.5:
+                low_building.add(building)
+        up_buildings.selected_buildings -= low_building
         # 特别操作, 只对某种建筑进行操作
         item_id = only_item_id
         if not item_id is None:
