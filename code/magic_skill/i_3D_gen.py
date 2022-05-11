@@ -93,22 +93,31 @@ append_point=tuple(),back_start_point=True):
                 if last_Z > Z and len(point_list) > 1:
                     # 上次高度 > 此次高度， 下降
                     p = list(point_list.pop(-1))
-                    p[2] += -0.25
+                    p[2] += 0.25
                     point_list.append(tuple(p))
                     p = list(point)
-                    p[2] += -0.25
+                    p[1] += 0.25
+                    p[2] += 0.25
                     # p = g0_campare(p)
                     point_list.append(tuple(p))
                 # elif (cmd == "G1" and last_cmd == "G0") and len(point_list)>1:
                 elif last_Z < Z and len(point_list)>1:
                     # 上次高度 < 此次高度， 升高
-                    # 将上一个点抬升0.25
-                    p = list(point_list.pop(-1))
-                    p[2] += +0.25
-                    point_list.append(tuple(p))
-                    # 当前点抬升0.25
+                    # 将上一个点抬升0.25 
+                    p1 = list(point_list.pop(-1))
+                    p1[2] += -0.25
+                    # p1[0] += +0.25
+                    # 插一个点做成直角
+                    if abs(abs(point_list[-1][1]) - abs(point[1]))> 1:
+                        p2 = list(p1)
+                        p2[1] = point_list[-1][1]
+                        point_list.append(tuple(p2))
+                    point_list.append(tuple(p1))
+
+                    # 添加当前点
                     p = list(point)
-                    p[2] += 0.25
+                    # 当前点抬升0.25
+                    # p[2] += 0.25
                     point_list.append(tuple(p))
 
                 else:
@@ -116,10 +125,14 @@ append_point=tuple(),back_start_point=True):
                 
                 last_point = tuple(point)
                 last_cmd = cmd
-                last_Z = 0
+                last_Z = Z
 
-
-    point_list = point_list[:-1]
+    mean_y = sum(i[1] for i in point_list) / len(point_list)
+    mean_y *= 2
+    if math.dist(point_list[0], point_list[1]) > mean_y:
+        point_list = point_list[1:]
+    if math.dist(point_list[-2], point_list[-1]) > mean_y:
+        point_list = point_list[:-1]
     x_mean = sum([p[0] for p in point_list]) / len(point_list)
     y_mean = sum([p[1] for p in point_list]) / len(point_list)
     z_mean = sum([p[2] for p in point_list]) / len(point_list)
@@ -130,10 +143,19 @@ append_point=tuple(),back_start_point=True):
     posdata = [[]]
     [posdata[0].extend((p[0]-x_mean, p[1]-y_mean, p[2])) for p in point_list if z_min < p[2] < z_max]
     posdata[0].extend(append_point)
+
+    # 回到起点
     if back_start_point:
-        sp = list(posdata[0][:3])
-        sp[2] = posdata[0][-1] + (-0.25 if posdata[0][-1] > posdata[0][2] else 0.25)
+        # 终点下移
+        sp = list(posdata[0][-3:])
+        sp[2] -= 1
         posdata[0].extend(tuple(sp))
+        # 起点下方
+        sp = list(posdata[0][:3])
+        sp[2] = posdata[0][-1] 
+        posdata[0].extend(tuple(sp))
+        
+        # 起点
         sp[2] = posdata[0][2]
         posdata[0].extend(tuple(sp))
     print("坐标长度:", len(point_list))
